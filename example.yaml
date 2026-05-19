@@ -1,0 +1,75 @@
+esphome:
+  name: gaviota-example
+  friendly_name: Gaviota Example
+
+esp32:
+  board: esp32dev
+  framework:
+    type: arduino
+
+logger:
+
+api:
+
+ota:
+
+wifi:
+  ssid: "YOUR_WIFI_SSID"
+  password: "YOUR_WIFI_PASSWORD"
+
+external_components:
+  - source: github://klyr/esphome_remote_gaviota
+    components: [gaviota_protocol]
+
+gaviota_protocol:
+
+# Known Gaviota commands:
+# 0x11 Up, 0x1E Release Up, 0x33 Down, 0x3C Release Down,
+# 0x55 Stop, 0x80 Stop + Up, 0x81 Stop + Down, 0xCC P2, 0xC1 M
+
+remote_transmitter:
+  pin: GPIO4
+
+remote_receiver:
+  pin:
+    number: GPIO5
+    inverted: true
+  dump: [gaviota]
+  on_gaviota:
+    then:
+      - logger.log:
+          format: "Gaviota addr=0x%08X ch=%u cmd=0x%02X"
+          args: [x.address, x.channel, x.command]
+
+binary_sensor:
+  - platform: remote_receiver
+    name: "Gaviota Up"
+    gaviota:
+      address: 0x01234567
+      channel: 0x1
+      command: 0x11
+
+button:
+  - platform: template
+    name: "Send Gaviota Up"
+    on_press:
+      - remote_transmitter.transmit_gaviota:
+          address: 0x01234567
+          channel: 0x1
+          command: 0x11
+
+  - platform: template
+    name: "Send Gaviota Down"
+    on_press:
+      - remote_transmitter.transmit_gaviota:
+          address: 0x01234567
+          channel: 0x1
+          command: 0x33
+
+  - platform: template
+    name: "Send Gaviota Stop"
+    on_press:
+      - remote_transmitter.transmit_gaviota:
+          address: 0x01234567
+          channel: 0x1
+          command: 0x55
