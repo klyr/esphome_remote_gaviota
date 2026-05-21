@@ -25,7 +25,7 @@ This repository adds a `gaviota` protocol integration for ESPHome `remote_base`.
 
 ```yaml
 external_components:
-  - source: github://YOUR_GITHUB_USER/esphome_remote_gaviota
+  - source: github://klyr/esphome_remote_gaviota
     components: [gaviota_protocol]
 
 gaviota_protocol:
