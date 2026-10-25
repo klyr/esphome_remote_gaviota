@@ -21,9 +21,9 @@ struct GaviotaData {
 
 class GaviotaProtocol : public RemoteProtocol<GaviotaData> {
  public:
-  void encode(RemoteTransmitData *dst, const GaviotaData &data) override;
-  optional<GaviotaData> decode(RemoteReceiveData src) override;
-  void dump(const GaviotaData &data) override;
+  void encode(RemoteTransmitData *dst, const GaviotaData &data);
+  optional<GaviotaData> decode(RemoteReceiveData src);
+  void dump(const GaviotaData &data);
 };
 
 DECLARE_REMOTE_PROTOCOL(Gaviota)
